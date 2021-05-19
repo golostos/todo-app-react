@@ -20,11 +20,13 @@ export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async function (a
     else throw new Error('Response is not ok')
 })
 
-export const createTask = createAsyncThunk('tasks/createTask', async function(newTask: Task) {
+export const createTask = createAsyncThunk('tasks/createTask', async function(newTask: Task, thunkAPI) {
+    const state = thunkAPI.getState() as RootState
     const response = await fetch('/api/task', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'authorization': state.users.token
         },
         body: JSON.stringify(newTask)
     })
@@ -42,11 +44,7 @@ export const tasksSlice = createSlice({
         error: null,
         tasks: []
     } as TasksState,
-    reducers: {
-        // taskAdded(state, action: PayloadAction<TaskDTO>) {
-        //     state.tasks.push(action.payload)
-        // }
-    },
+    reducers: {},
     extraReducers: builder => {
         builder.addCase(fetchTasks.pending, (state, action) => {
             state.status = 'loading'
@@ -64,8 +62,6 @@ export const tasksSlice = createSlice({
         })
     }
 })
-
-// export const { taskAdded } = tasksSlice.actions
 
 export default tasksSlice.reducer
 

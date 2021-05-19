@@ -2,7 +2,7 @@ import TasksList from './components/TasksList';
 import NewTask from './components/NewTask';
 import { makeStyles } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import { selectToken } from './features/users/usersSlice';
+import { selectToken, selectIsLogin, selectUserError } from './features/users/usersSlice';
 import Login from './components/Login';
 
 const useStyles = makeStyles({
@@ -14,17 +14,17 @@ const useStyles = makeStyles({
 })
 
 function App() {
-  const token = useSelector(selectToken)
+  const isLogin = useSelector(selectIsLogin)
   const classes = useStyles()
 
-  if (token === '') {
-    return <Login />
-  } else return (
-    <div className={classes.root}>
-      <NewTask />
-      <TasksList />
-    </div>
-  );
+  if (isLogin) {
+    return (
+      <div className={classes.root}>
+        <NewTask />
+        <TasksList />
+      </div>
+    )    
+  } else return <Login /> ;
 }
 
 export default App;
